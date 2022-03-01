@@ -33,13 +33,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const { 'nextauth.token': token} = parseCookies();
 
-    if (token) {
-      api.get('/me').then(response => {
-        const { email, permissions, roles } = response.data;
-        setUser({ email, permissions, roles });
-      })
+  if (token) {
+      api.get('/me')
+        .then(response => {
+          const { email, permissions, roles } = response.data
+
+          setUser({ email, permissions, roles })
+        })
+        .catch(() => {
+          console.log("error")
+        })
     }
   }, [])
+
 
   async function signIn({email, password}: SignInCredentials) {
     try {
